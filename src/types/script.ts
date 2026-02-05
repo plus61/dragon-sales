@@ -18,6 +18,17 @@ export interface Script {
   tips?: string[]
 }
 
+export type ResourceType = 'pptx' | 'pdf' | 'video' | 'image' | 'link'
+
+export interface Resource {
+  id: string
+  type: ResourceType
+  title: string
+  description?: string
+  url: string
+  timing?: string  // いつ表示するかのガイダンス
+}
+
 export interface ScriptNode {
   id: string
   phase: Phase
@@ -28,6 +39,7 @@ export interface ScriptNode {
   qa: QA[]
   actions: Action[]
   position: { x: number; y: number }
+  resources?: Resource[]  // 関連資料
 }
 
 export interface FlowEdge {

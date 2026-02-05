@@ -9,6 +9,7 @@ import { TalkScript } from './TalkScript'
 import { QAAccordion } from './QAAccordion'
 import { ActionButtons } from './ActionButtons'
 import { Checkpoints } from './Checkpoints'
+import { Resources } from './Resources'
 import { type ScriptNode, type Phase } from '@/types/script'
 
 const phaseLabels: Record<Phase, string> = {
@@ -55,7 +56,7 @@ export function DetailPanel({ node, isOpen, onClose, onNavigate }: DetailPanelPr
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed right-0 top-0 bottom-0 w-full max-w-md bg-card border-l border-border/40 shadow-2xl z-50 flex flex-col"
+            className="fixed right-0 top-0 bottom-0 w-full max-w-md bg-card border-l border-border/40 shadow-2xl z-50 flex flex-col overflow-hidden"
           >
             {/* Header */}
             <div className="flex items-center justify-between p-4 border-b border-border/40">
@@ -111,8 +112,15 @@ export function DetailPanel({ node, isOpen, onClose, onNavigate }: DetailPanelPr
             </div>
 
             {/* Content */}
-            <ScrollArea className="flex-1 px-4">
+            <ScrollArea className="flex-1 min-h-0 px-4">
               <div className="py-4 space-y-6">
+                {node.resources && node.resources.length > 0 && (
+                  <>
+                    <Resources resources={node.resources} />
+                    <Separator className="bg-border/40" />
+                  </>
+                )}
+
                 <TalkScript script={node.script} />
 
                 <Separator className="bg-border/40" />
