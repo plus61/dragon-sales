@@ -5,12 +5,20 @@ import { Header } from '@/components/layout/Header'
 import { ProgressBar } from '@/components/layout/ProgressBar'
 import { FlowCanvasWrapper } from '@/components/flow/FlowCanvasWrapper'
 import { DetailPanel } from '@/components/panel/DetailPanel'
+import { PracticeMode } from '@/features/practice/PracticeMode'
 import { scriptNodes } from '@/data/scripts/sales-flow'
+import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts'
+import { usePracticeMode } from '@/hooks/usePracticeMode'
 import { type ScriptNode, type Phase } from '@/types/script'
+
+const phases: Phase[] = ['opening', 'hearing', 'proposal', 'closing', 'followup']
 
 export default function Home() {
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null)
   const [isPanelOpen, setIsPanelOpen] = useState(false)
+
+  // Practice mode
+  const practice = usePracticeMode()
 
   // Get selected node data
   const selectedNode: ScriptNode | null = useMemo(
@@ -30,7 +38,6 @@ export default function Home() {
   // Handle panel close
   const handlePanelClose = useCallback(() => {
     setIsPanelOpen(false)
-    // Don't clear selection to keep visual feedback
   }, [])
 
   // Handle navigation from action buttons
@@ -39,23 +46,55 @@ export default function Home() {
   }, [])
 
   // Handle phase click from progress bar
-  const handlePhaseClick = useCallback((phase: Phase) => {
-    const firstNodeOfPhase = scriptNodes.find((node) => node.phase === phase)
-    if (firstNodeOfPhase) {
-      handleNodeSelect(firstNodeOfPhase.id)
-    }
-  }, [handleNodeSelect])
+  const handlePhaseClick = useCallback(
+    (phase: Phase) => {
+      const firstNodeOfPhase = scriptNodes.find((node) => node.phase === phase)
+      if (firstNodeOfPhase) {
+        handleNodeSelect(firstNodeOfPhase.id)
+      }
+    },
+    [handleNodeSelect]
+  )
 
-  // Handle practice mode (placeholder)
+  // Navigate to previous/next phase
+  const navigatePhase = useCallback(
+    (direction: 'prev' | 'next') => {
+      const currentIndex = currentPhase ? phases.indexOf(currentPhase) : -1
+      let newIndex: number
+
+      if (direction === 'prev') {
+        newIndex = currentIndex <= 0 ? phases.length - 1 : currentIndex - 1
+      } else {
+        newIndex = currentIndex >= phases.length - 1 ? 0 : currentIndex + 1
+      }
+
+      handlePhaseClick(phases[newIndex])
+    },
+    [currentPhase, handlePhaseClick]
+  )
+
+  // Keyboard shortcuts
+  useKeyboardShortcuts({
+    onEscape: () => {
+      if (practice.isActive) {
+        practice.endPractice()
+      } else if (isPanelOpen) {
+        handlePanelClose()
+      }
+    },
+    onArrowLeft: () => navigatePhase('prev'),
+    onArrowRight: () => navigatePhase('next'),
+  })
+
+  // Handle practice mode
   const handlePracticeMode = useCallback(() => {
-    // TODO: Implement practice mode
-    console.log('Practice mode clicked')
-  }, [])
+    practice.startPractice()
+  }, [practice])
 
-  // Handle PDF export (placeholder)
+  // Handle PDF export (placeholder - to be implemented)
   const handleExportPDF = useCallback(() => {
-    // TODO: Implement PDF export
-    console.log('Export PDF clicked')
+    // TODO: Implement PDF export with @react-pdf/renderer
+    alert('PDF出力機能は今後実装予定です')
   }, [])
 
   return (
@@ -83,6 +122,21 @@ export default function Home() {
         isOpen={isPanelOpen}
         onClose={handlePanelClose}
         onNavigate={handleNavigate}
+      />
+
+      <PracticeMode
+        isOpen={practice.isActive}
+        onClose={practice.endPractice}
+        currentRole={practice.currentRole}
+        currentQuestion={practice.currentQuestion}
+        showAnswer={practice.showAnswer}
+        score={practice.score}
+        totalAnswered={practice.totalAnswered}
+        totalQuestions={practice.totalQuestions}
+        onToggleRole={practice.toggleRole}
+        onShowAnswer={practice.revealAnswer}
+        onNextQuestion={practice.nextQuestion}
+        onResetScore={practice.resetScore}
       />
     </div>
   )
