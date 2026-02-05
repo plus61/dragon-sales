@@ -1,7 +1,8 @@
 {
-  "name": "dragon_sales_temp",
-  "version": "0.1.0",
+  "name": "dragon-sales",
+  "version": "1.0.0",
   "private": true,
+  "description": "AI研修会社の営業トークスクリプトをインタラクティブに可視化するWebアプリ",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
