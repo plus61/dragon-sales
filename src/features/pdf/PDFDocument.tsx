@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
     color: '#64748b',
   },
   nodeSection: {
-    marginBottom: 20,
+    marginBottom: 24,
   },
   nodeHeader: {
     flexDirection: 'row',
@@ -105,11 +105,11 @@ const styles = StyleSheet.create({
   },
   scriptText: {
     fontSize: 10,
-    lineHeight: 1.6,
+    lineHeight: 1.8,
     color: '#1e293b',
   },
   tipsContainer: {
-    marginTop: 8,
+    marginTop: 10,
     paddingLeft: 8,
     borderLeftWidth: 2,
     borderLeftColor: '#10b981',
@@ -123,22 +123,24 @@ const styles = StyleSheet.create({
   tipItem: {
     fontSize: 9,
     color: '#475569',
-    marginBottom: 2,
+    lineHeight: 1.6,
+    marginBottom: 4,
   },
   checkpointsContainer: {
-    marginTop: 8,
+    marginTop: 12,
   },
   checkpointsLabel: {
     fontSize: 10,
     fontWeight: 700,
     color: '#f59e0b',
-    marginBottom: 4,
+    marginBottom: 6,
   },
   checkpointItem: {
     fontSize: 9,
     color: '#475569',
-    marginBottom: 2,
+    marginBottom: 5,
     flexDirection: 'row',
+    alignItems: 'flex-start',
   },
   checkBox: {
     width: 8,
@@ -146,21 +148,21 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#94a3b8',
     marginRight: 6,
-    marginTop: 1,
+    marginTop: 2,
   },
   qaContainer: {
-    marginTop: 8,
+    marginTop: 12,
   },
   qaLabel: {
     fontSize: 10,
     fontWeight: 700,
     color: '#8b5cf6',
-    marginBottom: 4,
+    marginBottom: 6,
   },
   qaItem: {
-    marginBottom: 6,
+    marginBottom: 8,
     backgroundColor: '#f1f5f9',
-    padding: 8,
+    padding: 10,
     borderRadius: 4,
   },
   question: {
@@ -172,10 +174,10 @@ const styles = StyleSheet.create({
   answer: {
     fontSize: 9,
     color: '#475569',
-    lineHeight: 1.5,
+    lineHeight: 1.7,
   },
   actionsContainer: {
-    marginTop: 8,
+    marginTop: 12,
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 6,
@@ -291,9 +293,9 @@ export function SalesScriptPDFDocument({ nodes }: PDFDocumentProps) {
             </View>
 
             {phaseNodes.map((node, index) => (
-              <View key={node.id} style={styles.nodeSection} wrap={false}>
+              <View key={node.id} style={styles.nodeSection}>
                 {/* Node Header */}
-                <View style={styles.nodeHeader}>
+                <View style={styles.nodeHeader} wrap={false}>
                   <View
                     style={[styles.phaseBadge, { backgroundColor: phaseColors[node.phase] }]}
                   >
@@ -307,28 +309,28 @@ export function SalesScriptPDFDocument({ nodes }: PDFDocumentProps) {
                 <View style={styles.scriptContainer}>
                   <Text style={styles.scriptLabel}>トークスクリプト</Text>
                   <Text style={styles.scriptText}>{node.script.main}</Text>
-
-                  {/* Tips */}
-                  {node.script.tips && node.script.tips.length > 0 && (
-                    <View style={styles.tipsContainer}>
-                      <Text style={styles.tipsLabel}>ポイント</Text>
-                      {node.script.tips.map((tip, tipIndex) => (
-                        <Text key={tipIndex} style={styles.tipItem}>
-                          • {tip}
-                        </Text>
-                      ))}
-                    </View>
-                  )}
                 </View>
+
+                {/* Tips */}
+                {node.script.tips && node.script.tips.length > 0 && (
+                  <View style={styles.tipsContainer} wrap={false}>
+                    <Text style={styles.tipsLabel}>ポイント</Text>
+                    {node.script.tips.map((tip, tipIndex) => (
+                      <Text key={tipIndex} style={styles.tipItem}>
+                        • {tip}
+                      </Text>
+                    ))}
+                  </View>
+                )}
 
                 {/* Checkpoints */}
                 {node.checkpoints.length > 0 && (
                   <View style={styles.checkpointsContainer}>
-                    <Text style={styles.checkpointsLabel}>チェックポイント</Text>
+                    <Text style={styles.checkpointsLabel} minPresenceAhead={20}>チェックポイント</Text>
                     {node.checkpoints.map((checkpoint, cpIndex) => (
-                      <View key={cpIndex} style={styles.checkpointItem}>
+                      <View key={cpIndex} style={styles.checkpointItem} wrap={false}>
                         <View style={styles.checkBox} />
-                        <Text style={{ fontSize: 9, color: '#475569' }}>{checkpoint}</Text>
+                        <Text style={{ fontSize: 9, color: '#475569', lineHeight: 1.6, flex: 1 }}>{checkpoint}</Text>
                       </View>
                     ))}
                   </View>
@@ -337,9 +339,9 @@ export function SalesScriptPDFDocument({ nodes }: PDFDocumentProps) {
                 {/* Q&A */}
                 {node.qa.length > 0 && (
                   <View style={styles.qaContainer}>
-                    <Text style={styles.qaLabel}>想定Q&A</Text>
+                    <Text style={styles.qaLabel} minPresenceAhead={30}>想定Q&A</Text>
                     {node.qa.map((qa, qaIndex) => (
-                      <View key={qaIndex} style={styles.qaItem}>
+                      <View key={qaIndex} style={styles.qaItem} wrap={false}>
                         <Text style={styles.question}>Q: {qa.question}</Text>
                         <Text style={styles.answer}>A: {qa.answer}</Text>
                       </View>
@@ -349,7 +351,7 @@ export function SalesScriptPDFDocument({ nodes }: PDFDocumentProps) {
 
                 {/* Actions */}
                 {node.actions.length > 0 && (
-                  <View style={styles.actionsContainer}>
+                  <View style={styles.actionsContainer} wrap={false}>
                     <Text style={styles.actionsLabel}>次のアクション</Text>
                     {node.actions.map((action, actionIndex) => (
                       <Text key={actionIndex} style={styles.actionBadge}>
