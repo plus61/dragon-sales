@@ -11,6 +11,8 @@ import { SearchDialog } from '@/components/layout/SearchDialog'
 import { KeyboardHelp } from '@/components/layout/KeyboardHelp'
 import { SessionHistory } from '@/components/session/SessionHistory'
 import { WelcomeOverlay } from '@/components/session/WelcomeOverlay'
+import { OnboardingGuide } from '@/components/guide/OnboardingGuide'
+import { hasSeenGuide } from '@/components/guide/onboarding-steps'
 import { scriptNodes } from '@/data/scripts/sales-flow'
 import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts'
 import { usePracticeMode } from '@/hooks/usePracticeMode'
@@ -28,6 +30,7 @@ export default function Home() {
   const [isBrowseMode, setIsBrowseMode] = useState(false)
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
   const [isSelectDialogOpen, setIsSelectDialogOpen] = useState(false)
+  const [isGuideOpen, setIsGuideOpen] = useState(false)
 
   // Session management
   const session = useSession()
@@ -144,6 +147,14 @@ export default function Home() {
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [search])
 
+  // Show onboarding guide on first visit
+  useEffect(() => {
+    if (!hasSeenGuide()) {
+      const timer = setTimeout(() => setIsGuideOpen(true), 500)
+      return () => clearTimeout(timer)
+    }
+  }, [])
+
   // Handle practice mode
   const handlePracticeMode = useCallback(() => {
     practice.startPractice()
@@ -202,6 +213,7 @@ export default function Home() {
         currentPhase={currentPhase}
         onPracticeMode={handlePracticeMode}
         onOpenSearch={search.openSearch}
+        onOpenGuide={() => setIsGuideOpen(true)}
         showPDFButton={true}
         sessionProps={{
           currentSessionName: session.currentSession?.companyName,
@@ -294,9 +306,16 @@ export default function Home() {
             onCreateSession={handleWelcomeCreateSession}
             onSelectSession={handleWelcomeSelectSession}
             onBrowseMode={handleBrowseMode}
+            onOpenGuide={() => setIsGuideOpen(true)}
           />
         )}
       </AnimatePresence>
+
+      {/* Onboarding Guide */}
+      <OnboardingGuide
+        isOpen={isGuideOpen}
+        onClose={() => setIsGuideOpen(false)}
+      />
     </div>
   )
 }

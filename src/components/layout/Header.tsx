@@ -58,6 +58,7 @@ interface HeaderProps {
   currentPhase?: Phase
   onPracticeMode?: () => void
   onOpenSearch?: () => void
+  onOpenGuide?: () => void
   showPDFButton?: boolean
   sessionProps?: {
     currentSessionName?: string
@@ -75,7 +76,7 @@ interface HeaderProps {
   }
 }
 
-export function Header({ currentPhase, onPracticeMode, onOpenSearch, showPDFButton = true, sessionProps }: HeaderProps) {
+export function Header({ currentPhase, onPracticeMode, onOpenSearch, onOpenGuide, showPDFButton = true, sessionProps }: HeaderProps) {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between px-4">
@@ -98,6 +99,21 @@ export function Header({ currentPhase, onPracticeMode, onOpenSearch, showPDFButt
         </div>
 
         <div className="flex items-center gap-2">
+          {/* Guide Button */}
+          {onOpenGuide && (
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={onOpenGuide}
+              className="h-8 w-8 border-border/40 hover:border-neon-primary/60 hover:bg-neon-primary/10"
+              aria-label="使い方ガイド"
+            >
+              <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" />
+              </svg>
+            </Button>
+          )}
+
           {/* Search Button */}
           {onOpenSearch && (
             <Button
