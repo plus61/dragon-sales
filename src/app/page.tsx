@@ -278,6 +278,7 @@ export default function Home() {
         isOpen={isHistoryOpen}
         onClose={() => setIsHistoryOpen(false)}
         summaries={session.summaries}
+        onRefresh={session.refreshSummaries}
         onSelectSession={(id) => {
           handleSelectSession(id)
           setIsHistoryOpen(false)

@@ -141,4 +141,26 @@ export const sessionStorage = {
       outcome: s.result?.outcome,
     }))
   },
+
+  exportToJSON(): string {
+    const data = readStorage()
+    return JSON.stringify(data, null, 2)
+  },
+
+  importFromJSON(json: string): { success: boolean; count: number; error?: string } {
+    try {
+      const imported = JSON.parse(json) as StorageData
+      if (!imported.version || !Array.isArray(imported.sessions)) {
+        return { success: false, count: 0, error: '無効なファイル形式です' }
+      }
+      const current = readStorage()
+      const existingIds = new Set(current.sessions.map((s) => s.id))
+      const newSessions = imported.sessions.filter((s) => !existingIds.has(s.id))
+      current.sessions = [...newSessions, ...current.sessions]
+      writeStorage(current)
+      return { success: true, count: newSessions.length }
+    } catch {
+      return { success: false, count: 0, error: 'JSONの解析に失敗しました' }
+    }
+  },
 }

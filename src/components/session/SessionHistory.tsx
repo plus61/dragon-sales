@@ -1,5 +1,6 @@
 'use client'
 
+import { useRef } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
@@ -11,6 +12,7 @@ import {
   DialogDescription,
 } from '@/components/ui/dialog'
 import { type SessionSummary } from '@/types/session'
+import { sessionStorage } from '@/lib/storage'
 
 const outcomeLabels: Record<string, { text: string; className: string }> = {
   won: { text: '受注', className: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' },
@@ -25,6 +27,7 @@ interface SessionHistoryProps {
   summaries: SessionSummary[]
   onSelectSession: (sessionId: string) => void
   onDeleteSession: (sessionId: string) => void
+  onRefresh?: () => void
 }
 
 export function SessionHistory({
@@ -33,9 +36,43 @@ export function SessionHistory({
   summaries,
   onSelectSession,
   onDeleteSession,
+  onRefresh,
 }: SessionHistoryProps) {
+  const fileInputRef = useRef<HTMLInputElement>(null)
   const completedSessions = summaries.filter((s) => s.status === 'completed')
   const inProgressSessions = summaries.filter((s) => s.status === 'in_progress')
+
+  const handleExport = () => {
+    const json = sessionStorage.exportToJSON()
+    const blob = new Blob([json], { type: 'application/json' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `dragon-sales-sessions-${new Date().toISOString().slice(0, 10)}.json`
+    a.click()
+    URL.revokeObjectURL(url)
+  }
+
+  const handleImport = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    const reader = new FileReader()
+    reader.onload = (event) => {
+      const json = event.target?.result as string
+      const result = sessionStorage.importFromJSON(json)
+      if (result.success) {
+        onRefresh?.()
+        alert(`${result.count}件のセッションをインポートしました`)
+      } else {
+        alert(`インポート失敗: ${result.error}`)
+      }
+    }
+    reader.readAsText(file)
+
+    // Reset input so the same file can be selected again
+    e.target.value = ''
+  }
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
@@ -95,6 +132,40 @@ export function SessionHistory({
             )}
           </div>
         </ScrollArea>
+
+        {/* Export / Import */}
+        <div className="flex items-center gap-2 pt-2 border-t border-border/40">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleExport}
+            disabled={summaries.length === 0}
+            className="text-xs"
+          >
+            <svg className="w-3.5 h-3.5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+            </svg>
+            エクスポート
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => fileInputRef.current?.click()}
+            className="text-xs"
+          >
+            <svg className="w-3.5 h-3.5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+            </svg>
+            インポート
+          </Button>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".json"
+            onChange={handleImport}
+            className="hidden"
+          />
+        </div>
       </DialogContent>
     </Dialog>
   )
