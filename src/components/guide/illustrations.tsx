@@ -415,7 +415,7 @@ export function TipsIllustration() {
       icon: (
         <div className="flex items-center gap-0.5">
           <kbd className="h-4 rounded border border-border/60 bg-muted/50 px-1 text-[8px] font-mono text-muted-foreground">
-            \u2318
+            {'⌘'}
           </kbd>
           <kbd className="h-4 rounded border border-border/60 bg-muted/50 px-1 text-[8px] font-mono text-muted-foreground">
             K
@@ -428,10 +428,10 @@ export function TipsIllustration() {
       icon: (
         <div className="flex items-center gap-0.5">
           <kbd className="h-4 rounded border border-border/60 bg-muted/50 px-1 text-[8px] font-mono text-muted-foreground">
-            \u2190
+            {'←'}
           </kbd>
           <kbd className="h-4 rounded border border-border/60 bg-muted/50 px-1 text-[8px] font-mono text-muted-foreground">
-            \u2192
+            {'→'}
           </kbd>
         </div>
       ),

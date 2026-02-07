@@ -2,10 +2,8 @@
 
 import { useState, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { pdf } from '@react-pdf/renderer'
 import { Button } from '@/components/ui/button'
 import { onboardingSteps, markGuideSeen } from './onboarding-steps'
-import { GuidePDFDocument } from '@/features/pdf/GuidePDFDocument'
 
 interface OnboardingGuideProps {
   isOpen: boolean
@@ -67,6 +65,10 @@ export function OnboardingGuide({ isOpen, onClose }: OnboardingGuideProps) {
   const handleDownloadPDF = useCallback(async () => {
     setIsGeneratingPDF(true)
     try {
+      const [{ pdf }, { GuidePDFDocument }] = await Promise.all([
+        import('@react-pdf/renderer'),
+        import('@/features/pdf/GuidePDFDocument'),
+      ])
       const blob = await pdf(<GuidePDFDocument />).toBlob()
       const url = URL.createObjectURL(blob)
       const link = document.createElement('a')
