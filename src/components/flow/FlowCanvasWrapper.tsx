@@ -20,6 +20,8 @@ const FlowCanvas = dynamic(
 interface FlowCanvasWrapperProps {
   selectedNodeId: string | null
   onNodeSelect: (nodeId: string | null) => void
+  sessionId?: string
+  getNodeProgress?: (nodeId: string) => { completed: number; total: number }
 }
 
 export function FlowCanvasWrapper(props: FlowCanvasWrapperProps) {

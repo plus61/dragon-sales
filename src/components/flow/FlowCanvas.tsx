@@ -29,9 +29,17 @@ const edgeTypes = {
   custom: CustomEdge,
 }
 
+// Generate one-line summaries from script main text
+function getNodeSummary(node: ScriptNodeDataType): string {
+  const firstLine = node.script.main.trim().split('\n')[0]
+  return firstLine.length > 30 ? firstLine.slice(0, 30) + '...' : firstLine
+}
+
 interface FlowCanvasProps {
   selectedNodeId: string | null
   onNodeSelect: (nodeId: string | null) => void
+  sessionId?: string
+  getNodeProgress?: (nodeId: string) => { completed: number; total: number }
 }
 
 // Use generic Node type with index signature compatible data
@@ -40,26 +48,40 @@ interface FlowNodeData extends Record<string, unknown> {
   phase: Phase
   duration: string
   isSelected: boolean
+  checkpointTotal?: number
+  checkpointCompleted?: number
+  summary?: string
+  hasResources?: boolean
 }
 
 type FlowNode = Node<FlowNodeData>
 
-export function FlowCanvas({ selectedNodeId, onNodeSelect }: FlowCanvasProps) {
+export function FlowCanvas({ selectedNodeId, onNodeSelect, sessionId, getNodeProgress }: FlowCanvasProps) {
   // Convert script nodes to ReactFlow nodes
   const initialNodes: FlowNode[] = useMemo(
     () =>
-      scriptNodes.map((node: ScriptNodeDataType): FlowNode => ({
-        id: node.id,
-        type: 'scriptNode',
-        position: node.position,
-        data: {
-          label: node.title,
-          phase: node.phase,
-          duration: node.duration,
-          isSelected: false,
-        },
-      })),
-    []
+      scriptNodes.map((node: ScriptNodeDataType): FlowNode => {
+        const progress = sessionId && getNodeProgress
+          ? getNodeProgress(node.id)
+          : { completed: 0, total: 0 }
+
+        return {
+          id: node.id,
+          type: 'scriptNode',
+          position: node.position,
+          data: {
+            label: node.title,
+            phase: node.phase,
+            duration: node.duration,
+            isSelected: false,
+            checkpointTotal: sessionId ? node.checkpoints.length : undefined,
+            checkpointCompleted: sessionId ? progress.completed : undefined,
+            summary: getNodeSummary(node),
+            hasResources: (node.resources?.length ?? 0) > 0,
+          },
+        }
+      }),
+    [sessionId, getNodeProgress]
   )
 
   // Convert script edges to ReactFlow edges
@@ -83,18 +105,27 @@ export function FlowCanvas({ selectedNodeId, onNodeSelect }: FlowCanvasProps) {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes)
   const [edges, , onEdgesChange] = useEdgesState(initialEdges)
 
-  // Update nodes when selection changes
+  // Update nodes when selection or session data changes
   useEffect(() => {
     setNodes((nds) =>
-      nds.map((node) => ({
-        ...node,
-        data: {
-          ...node.data,
-          isSelected: node.id === selectedNodeId,
-        },
-      }))
+      nds.map((node) => {
+        const progress = sessionId && getNodeProgress
+          ? getNodeProgress(node.id)
+          : { completed: 0, total: 0 }
+        const scriptNode = scriptNodes.find((n) => n.id === node.id)
+
+        return {
+          ...node,
+          data: {
+            ...node.data,
+            isSelected: node.id === selectedNodeId,
+            checkpointTotal: sessionId && scriptNode ? scriptNode.checkpoints.length : undefined,
+            checkpointCompleted: sessionId ? progress.completed : undefined,
+          },
+        }
+      })
     )
-  }, [selectedNodeId, setNodes])
+  }, [selectedNodeId, sessionId, getNodeProgress, setNodes])
 
   const onNodeClick = useCallback(
     (_: React.MouseEvent, node: Node) => {

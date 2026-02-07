@@ -1,23 +1,46 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { cn } from '@/lib/utils'
 
 interface CheckpointsProps {
   checkpoints: string[]
+  sessionId?: string
+  nodeId?: string
+  persistedStates?: boolean[] | null
+  onCheckpointChange?: (nodeId: string, index: number, checked: boolean) => void
 }
 
-export function Checkpoints({ checkpoints }: CheckpointsProps) {
-  const [checked, setChecked] = useState<boolean[]>(
+export function Checkpoints({
+  checkpoints,
+  sessionId,
+  nodeId,
+  persistedStates,
+  onCheckpointChange,
+}: CheckpointsProps) {
+  // Local state fallback when no session is active
+  const [localChecked, setLocalChecked] = useState<boolean[]>(
     new Array(checkpoints.length).fill(false)
   )
 
+  const checked = useMemo(() => {
+    if (sessionId && persistedStates && persistedStates.length === checkpoints.length) {
+      return persistedStates
+    }
+    return localChecked
+  }, [sessionId, persistedStates, localChecked, checkpoints.length])
+
   const toggleCheckpoint = (index: number) => {
-    setChecked((prev) => {
-      const newChecked = [...prev]
-      newChecked[index] = !newChecked[index]
-      return newChecked
-    })
+    const newValue = !checked[index]
+    if (sessionId && nodeId && onCheckpointChange) {
+      onCheckpointChange(nodeId, index, newValue)
+    } else {
+      setLocalChecked((prev) => {
+        const newChecked = [...prev]
+        newChecked[index] = newValue
+        return newChecked
+      })
+    }
   }
 
   if (checkpoints.length === 0) return null

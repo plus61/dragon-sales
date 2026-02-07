@@ -1,0 +1,12 @@
+<svg width="192" height="192" viewBox="0 0 192 192" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="192" height="192" rx="24" fill="#0a0a0f"/>
+  <rect x="8" y="8" width="176" height="176" rx="20" fill="url(#gradient)" fill-opacity="0.2"/>
+  <text x="96" y="110" font-family="system-ui, -apple-system, sans-serif" font-size="72" font-weight="bold" fill="#6366f1" text-anchor="middle">D</text>
+  <text x="96" y="150" font-family="system-ui, -apple-system, sans-serif" font-size="20" fill="#94a3b8" text-anchor="middle">Sales</text>
+  <defs>
+    <linearGradient id="gradient" x1="0" y1="0" x2="192" y2="192" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#6366f1"/>
+      <stop offset="1" stop-color="#8b5cf6"/>
+    </linearGradient>
+  </defs>
+</svg>

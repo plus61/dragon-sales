@@ -67,7 +67,7 @@ export const scriptNodes: ScriptNode[] = [
     actions: [
       { label: "リサーチ完了", nextNodeId: "opening-1", style: "primary" },
     ],
-    position: { x: 250, y: -100 },
+    position: { x: 300, y: -120 },
   },
   {
     id: "opening-1",
@@ -104,7 +104,7 @@ export const scriptNodes: ScriptNode[] = [
     actions: [
       { label: "AI認識を確認", nextNodeId: "ai-recognition", style: "primary" },
     ],
-    position: { x: 250, y: 50 },
+    position: { x: 300, y: 70 },
   },
   {
     id: "ai-recognition",
@@ -142,7 +142,7 @@ export const scriptNodes: ScriptNode[] = [
       { label: "興味がある", nextNodeId: "ai-level-2", style: "secondary" },
       { label: "興味はあるが未導入", nextNodeId: "ai-level-3", style: "primary" },
     ],
-    position: { x: 250, y: 150 },
+    position: { x: 300, y: 200 },
   },
   {
     id: "ai-level-1",
@@ -213,7 +213,7 @@ AIは、インターネット上の膨大なテキストから
       { label: "理解いただけた", nextNodeId: "hearing-beginner", style: "primary" },
       { label: "もう少し説明", nextNodeId: "ai-level-1", style: "secondary" },
     ],
-    position: { x: 0, y: 280 },
+    position: { x: -50, y: 380 },
   },
   {
     id: "hearing-beginner",
@@ -288,7 +288,7 @@ AIは、インターネット上の膨大なテキストから
       { label: "課題が見えた", nextNodeId: "hearing-1", style: "primary" },
       { label: "もう少し深堀り", nextNodeId: "hearing-2", style: "secondary" },
     ],
-    position: { x: 0, y: 380 },
+    position: { x: -50, y: 580 },
   },
   {
     id: "ai-level-2",
@@ -359,7 +359,7 @@ AIを活用できる可能性がある、ということです。
     actions: [
       { label: "ヒアリングへ", nextNodeId: "hearing-interested", style: "primary" },
     ],
-    position: { x: 250, y: 280 },
+    position: { x: 300, y: 380 },
   },
   {
     id: "hearing-interested",
@@ -441,7 +441,7 @@ Level 4: 業務変革（AIで業務プロセス改善）
       { label: "詳細ヒアリングへ", nextNodeId: "hearing-1", style: "primary" },
       { label: "深堀りが必要", nextNodeId: "hearing-2", style: "secondary" },
     ],
-    position: { x: 250, y: 380 },
+    position: { x: 300, y: 580 },
   },
   {
     id: "ai-level-3",
@@ -510,7 +510,7 @@ LLMは膨大なテキストデータから
     actions: [
       { label: "課題ヒアリング", nextNodeId: "hearing-considering", style: "primary" },
     ],
-    position: { x: 500, y: 280 },
+    position: { x: 650, y: 380 },
   },
   {
     id: "hearing-considering",
@@ -606,7 +606,7 @@ LLMは膨大なテキストデータから
       { label: "具体的に検討", nextNodeId: "hearing-1", style: "primary" },
       { label: "さらに深堀り", nextNodeId: "hearing-2", style: "secondary" },
     ],
-    position: { x: 500, y: 380 },
+    position: { x: 650, y: 580 },
   },
   {
     id: "hearing-1",
@@ -654,7 +654,7 @@ LLMは膨大なテキストデータから
       },
       { label: "ニーズなし", nextNodeId: "followup-1", style: "warning" },
     ],
-    position: { x: 250, y: 520 },
+    position: { x: 300, y: 780 },
   },
   {
     id: "hearing-2",
@@ -688,7 +688,7 @@ LLMは膨大なテキストデータから
     actions: [
       { label: "提案へ進む", nextNodeId: "proposal-1", style: "primary" },
     ],
-    position: { x: 550, y: 520 },
+    position: { x: 700, y: 780 },
   },
   {
     id: "proposal-necessity",
@@ -798,7 +798,7 @@ AIの「運転免許」を取っていただく
       { label: "研修内容を聞きたい", nextNodeId: "proposal-courses", style: "primary" },
       { label: "必要性はわかった", nextNodeId: "proposal-courses", style: "secondary" },
     ],
-    position: { x: 250, y: 670 },
+    position: { x: 300, y: 980 },
   },
   {
     id: "proposal-courses",
@@ -943,7 +943,7 @@ DXを推進するための知識と、
       { label: "他社との違いを聞きたい", nextNodeId: "proposal-differentiation", style: "primary" },
       { label: "詳細を聞きたい", nextNodeId: "proposal-differentiation", style: "secondary" },
     ],
-    position: { x: 250, y: 800 },
+    position: { x: 300, y: 1180 },
   },
   {
     id: "proposal-differentiation",
@@ -1075,7 +1075,7 @@ Dragon AIの強みです。
       { label: "見積りを依頼", nextNodeId: "closing-1", style: "secondary" },
       { label: "検討したい", nextNodeId: "closing-2", style: "warning" },
     ],
-    position: { x: 250, y: 930 },
+    position: { x: 300, y: 1380 },
   },
   {
     id: "proposal-subsidy",
@@ -1238,7 +1238,7 @@ AI研修を導入できるんです。
       { label: "グループ会社あり", nextNodeId: "proposal-group-plan", style: "secondary" },
       { label: "検討したい", nextNodeId: "closing-2", style: "warning" },
     ],
-    position: { x: 250, y: 1060 },
+    position: { x: 300, y: 1580 },
   },
   {
     id: "proposal-group-plan",
@@ -1351,7 +1351,7 @@ AI研修を導入できるんです。
       { label: "具体的に検討", nextNodeId: "closing-1", style: "primary" },
       { label: "社内検討が必要", nextNodeId: "closing-2", style: "secondary" },
     ],
-    position: { x: 250, y: 1190 },
+    position: { x: 300, y: 1780 },
   },
   {
     id: "closing-1",
@@ -1392,7 +1392,7 @@ AI研修を導入できるんです。
         style: "primary",
       },
     ],
-    position: { x: 100, y: 1330 },
+    position: { x: 100, y: 1980 },
   },
   {
     id: "closing-2",
@@ -1433,7 +1433,7 @@ AI研修を導入できるんです。
         style: "primary",
       },
     ],
-    position: { x: 400, y: 1330 },
+    position: { x: 500, y: 1980 },
   },
   {
     id: "followup-1",
@@ -1462,7 +1462,7 @@ AI研修を導入できるんです。
     actions: [
       { label: "完了", nextNodeId: "followup-2", style: "primary" },
     ],
-    position: { x: 250, y: 1480 },
+    position: { x: 300, y: 2180 },
   },
   {
     id: "followup-2",
@@ -1486,7 +1486,7 @@ AI研修を導入できるんです。
     checkpoints: ["サマリーメール送付完了", "CRM更新完了"],
     qa: [],
     actions: [],
-    position: { x: 250, y: 1630 },
+    position: { x: 300, y: 2380 },
   },
 ]
 

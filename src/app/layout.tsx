@@ -19,6 +19,15 @@ export const metadata: Metadata = {
   description: "AI研修会社の営業トークスクリプトをインタラクティブに可視化するWebアプリ",
   keywords: ["AI研修", "営業", "トークスクリプト", "セールス"],
   authors: [{ name: "Dragon AI" }],
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Dragon Sales",
+  },
+  formatDetection: {
+    telephone: false,
+  },
 }
 
 export const viewport: Viewport = {
@@ -35,6 +44,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ja" className="dark">
+      <head>
+        <link rel="apple-touch-icon" href="/icon-192.svg" />
+      </head>
       <body
         className={`${inter.variable} ${jetbrainsMono.variable} font-sans min-h-screen bg-background text-foreground`}
       >
